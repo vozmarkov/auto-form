@@ -62,6 +62,33 @@ export default function AutoFormObject<
     return item;
   };
 
+  function isZodPrimitiveArray(item: z.ZodTypeAny) {
+    let isPrimitiveArray = false;
+    let isEnumOfPrimitives = false;
+    let innerType = item;
+
+    // get the innertype of the ZodAnyType when its parent is a default
+    while ("innerType" in innerType._def && (innerType as any)._def.innerType) {
+      innerType = innerType._def.innerType;
+    }
+
+    // Now check if it is an array and the type of the elements
+    if (innerType instanceof z.ZodArray) {
+      innerType = innerType._def.type;
+
+      // Check for basic primitives
+      isPrimitiveArray =
+        innerType instanceof z.ZodString ||
+        innerType instanceof z.ZodNumber ||
+        innerType instanceof z.ZodBoolean;
+
+      // Check if its enum array
+      isEnumOfPrimitives = innerType instanceof z.ZodEnum;
+    }
+
+    return { isPrimitiveArray, isEnumOfPrimitives, innerType };
+  }
+
   return (
     <Accordion type="multiple" className="space-y-5 border-none">
       {Object.keys(shape).map((name) => {
@@ -100,20 +127,42 @@ export default function AutoFormObject<
             </AccordionItem>
           );
         }
+
+        let overrideFieldConfig = undefined;
+
         if (zodBaseType === "ZodArray") {
-          return (
-            <AutoFormArray
-              key={key}
-              name={name}
-              item={item as unknown as z.ZodArray<any>}
-              form={form}
-              fieldConfig={fieldConfig?.[name] ?? {}}
-              path={[...path, name]}
-            />
-          );
+          const { isPrimitiveArray, isEnumOfPrimitives, innerType } =
+            isZodPrimitiveArray(item);
+          if (isPrimitiveArray || isEnumOfPrimitives) {
+            // override item and fieldConfig for primitive array
+            item = innerType as z.ZodAny;
+            overrideFieldConfig = {
+              ...fieldConfig?.[name],
+              fieldType: "selectmultiinput",
+              inputProps: {
+                ...fieldConfig?.[name]?.inputProps,
+                creatable: !isEnumOfPrimitives,
+              },
+            };
+          } else {
+            return (
+              <AutoFormArray
+                key={key}
+                name={name}
+                item={item as unknown as z.ZodArray<any>}
+                form={form}
+                fieldConfig={fieldConfig?.[name] ?? {}}
+                path={[...path, name]}
+              />
+            );
+          }
         }
 
-        const fieldConfigItem: FieldConfigItem = fieldConfig?.[name] ?? {};
+        if (zodBaseType === "ZodArray") {
+        }
+
+        const fieldConfigItem: FieldConfigItem =
+          overrideFieldConfig ?? fieldConfig?.[name] ?? {};
         const zodInputProps = zodToHtmlInputProps(item);
         const isRequired =
           isRequiredByDependency ||

@@ -6,6 +6,7 @@ export type FieldConfigItem = {
   description?: React.ReactNode;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement> & {
     showLabel?: boolean;
+    creatable?: boolean; // only for enum-multi-input
   };
   label?: string;
   fieldType?:

@@ -1,5 +1,6 @@
 import Api from "./examples/Api";
 import Array from "./examples/Array";
+import ArrayPrimitive from "./examples/ArrayPrimitive";
 import Basics from "./examples/Basics";
 import ConfirmPassword from "./examples/ConfirmPassword";
 import Controlled from "./examples/Controlled";
@@ -18,6 +19,7 @@ function App() {
         <ConfirmPassword />
         <Api />
         <Array />
+        <ArrayPrimitive />
         <Dependencies />
       </div>
     </>

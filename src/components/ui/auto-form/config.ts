@@ -1,6 +1,7 @@
 import AutoFormCheckbox from "./fields/checkbox";
 import AutoFormDate from "./fields/date";
 import AutoFormEnum from "./fields/enum";
+import AutoFormEnumMultiInput from "./fields/enum-multi-input";
 import AutoFormFile from "./fields/file";
 import AutoFormInput from "./fields/input";
 import AutoFormNumber from "./fields/number";
@@ -18,6 +19,8 @@ export const INPUT_COMPONENTS = {
   number: AutoFormNumber,
   file: AutoFormFile,
   fallback: AutoFormInput,
+
+  selectmultiinput: AutoFormEnumMultiInput,
 };
 
 /**
