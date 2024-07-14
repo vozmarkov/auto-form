@@ -128,7 +128,7 @@ export default function AutoFormObject<
           );
         }
 
-        let overrideFieldConfig = undefined;
+        let overrideFieldConfig = undefined as FieldConfigItem | undefined;
 
         if (zodBaseType === "ZodArray") {
           const { isPrimitiveArray, isEnumOfPrimitives, innerType } =
@@ -161,8 +161,7 @@ export default function AutoFormObject<
         if (zodBaseType === "ZodArray") {
         }
 
-        const fieldConfigItem: FieldConfigItem =
-          overrideFieldConfig ?? fieldConfig?.[name] ?? {};
+        const fieldConfigItem: FieldConfigItem = overrideFieldConfig ?? fieldConfig?.[name] ?? {};
         const zodInputProps = zodToHtmlInputProps(item);
         const isRequired =
           isRequiredByDependency ||

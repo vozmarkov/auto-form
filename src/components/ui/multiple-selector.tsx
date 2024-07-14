@@ -102,7 +102,7 @@ function useRefWithCallback<
 >(): [boolean, (node: any) => void, RefObject<T>] {
   const ref = useRef<T | null>(null);
   const [toggle, setToggle] = useState(false);
-  const refCallback = useCallback((node) => {
+  const refCallback = useCallback((node:any) => {
     ref.current = node;
     setToggle((val) => !val);
   }, []);
@@ -459,7 +459,7 @@ const MultipleSelector = React.forwardRef<
     }, [creatable, commandProps?.filter]);
 
     const handleSearch = useCallback(
-      (search) => {
+      (search: string) => {
         setInputValue(search);
         inputProps?.onValueChange?.(search);
       },
@@ -467,7 +467,7 @@ const MultipleSelector = React.forwardRef<
     );
 
     const handleOpen = useCallback(
-      (state) => {
+      (state:boolean) => {
         const newKey = Date.now().toString();
         setContentId(newKey);
         setOpen(state);
@@ -642,8 +642,8 @@ const MultipleSelector = React.forwardRef<
                             }
                             setInputValue('');
                             const newOptions = [...selected, option];
-                            setSelected(newOptions);
-                            onChange?.(newOptions);
+                            setSelected(newOptions as Option[]);
+                            onChange?.(newOptions as Option[]);
                           }}
                           container={parentRef.current}
                           selectFirstItem={selectFirstItem}

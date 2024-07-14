@@ -30,7 +30,7 @@ export default function AutoFormEnumMultiInput({
     const baseValues = (getBaseSchema(zodItem) as unknown as z.ZodEnum<any>)
       ._def.values;
     if (!Array.isArray(baseValues)) {
-      for (const [k, v] of Object.entries(baseValues || {})) {
+      for (const [, v] of Object.entries(baseValues || {})) {
         const val = v as string;
         options.push({ value: val, label: val });
       }
